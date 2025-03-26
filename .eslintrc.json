@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json.schemastore.org/eslintrc",
+  "root": true,
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    // "plugin:tailwindcss/recommended",
+    "prettier",
+    "next/core-web-vitals"
+  ],
+  // "plugins": ["tailwindcss"],
+  "ignorePatterns": ["**/fixtures/**"],
+  "rules": {
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        "args": "all",
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_",
+        "caughtErrors": "all",
+        "caughtErrorsIgnorePattern": "^_",
+        "destructuredArrayIgnorePattern": "^_",
+        "ignoreRestSiblings": true
+      }
+    ]
+  },
+  "settings": {
+    // "tailwindcss": {
+    //   "config": "tailwind.config.ts",
+    //   "callees": ["cn", "cva"],
+    //   "removeDuplicates": true
+    // },
+    "next": {
+      "rootDir": ["apps/*/"],
+      "pagesDir": ["app"]
+    }
+  },
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx"],
+      "parser": "@typescript-eslint/parser"
+    }
+  ]
+}

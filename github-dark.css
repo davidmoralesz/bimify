@@ -1,0 +1,65 @@
+/*!
+  Theme: GitHub Dark
+  Description: Dark theme as seen on github.com
+  Author: github.com
+  Maintainer: @Hirse
+  Updated: 2021-05-15
+
+  Outdated base version: https://github.com/primer/github-syntax-dark
+  Current colors taken from GitHub's CSS
+*/
+
+.hljs {
+  color: oklch(85.69% 0.0141 247.99);
+  color: #c9d1d9;
+  color: oklch(17.63% 0.014 258.36);
+  color: #0d1117;
+  color: oklch(20.63% 0.014 258.36);
+  color: #14181e;
+  /* prettylights-syntax-keyword */
+  color: oklch(73.45% 0.1626 25.78);
+  color: #ff7b72;
+  /* prettylights-syntax-entity */
+  color: oklch(80.05% 0.1275 305.86);
+  color: #d2a8ff;
+  /* prettylights-syntax-constant */
+  color: oklch(78.57% 0.1153 246.66);
+  color: #79c0ff;
+  /* prettylights-syntax-string */
+  color: oklch(85.6% 0.0768 244.09);
+  color: #a5d6ff;
+  /* prettylights-syntax-variable */
+  color: oklch(79.91% 0.1412 60.1);
+  color: #ffa657;
+  /* prettylights-syntax-comment */
+  color: oklch(66.25% 0.0181 250.92);
+  color: #8b949e;
+  /* prettylights-syntax-entity-tag */
+  color: oklch(84.16% 0.1641 145.75);
+  color: #7ee787;
+  /* prettylights-syntax-storage-modifier-import */
+  color: oklch(85.69% 0.0141 247.99);
+  color: #c9d1d9;
+  /* prettylights-syntax-markup-heading */
+  color: oklch(56.86% 0.2023 259.67);
+  color: #1f6feb;
+  /* prettylights-syntax-markup-list */
+  color: oklch(85.74% 0.1331 89.95);
+  color: #f2cc60;
+  /* prettylights-syntax-markup-italic */
+  color: oklch(85.69% 0.0141 247.99);
+  color: #c9d1d9;
+  /* prettylights-syntax-markup-bold */
+  color: oklch(85.69% 0.0141 247.99);
+  color: #c9d1d9;
+  /* prettylights-syntax-markup-additioin */
+  color: oklch(90.72% 0.1123 146.34);
+  color: #aff5b4;
+  background-color: oklch(30.54% 0.0826 149.34);
+  color: #033a16;
+  /* prettylights-syntax-markup-deletion */
+  color: oklch(92.23% 0.0397 27.49);
+  color: #ffdcd7;
+  background-color: oklch(32.77% 0.1273 25.92);
+  background-color: #67060c;
+}
