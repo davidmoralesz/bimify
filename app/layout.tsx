@@ -17,8 +17,8 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: "Image Compressor",
-  description: "Compress your images locally",
+  title: "Bimify | Image Optimization",
+  description: "Local Image Compressor",
 }
 
 export default function RootLayout({
