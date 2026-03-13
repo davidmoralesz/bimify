@@ -21,6 +21,7 @@ export default function ImageGrid() {
 
   const {
     hasOriginalImages,
+    hasUncompressedImages,
     isCompressing,
     removeImage,
     downloadImage,
@@ -30,7 +31,7 @@ export default function ImageGrid() {
   } = useImageCompressor()
 
   const isCompressionDisabled = !hasOriginalImages || isCompressing
-  const isCompressionComplete = hasCompressedImages && !settingsChanged
+  const isCompressionComplete = hasCompressedImages && !settingsChanged && !hasUncompressedImages
   const isCompressionEnabled = !isCompressionDisabled && !isCompressionComplete
 
   if (!hasOriginalImages) return null

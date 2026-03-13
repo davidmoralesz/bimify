@@ -44,6 +44,7 @@ export default function SettingsSidebar() {
   const {
     originalImages,
     hasOriginalImages,
+    hasUncompressedImages,
     isCompressing,
     removeAllImages,
     compressAllImages,
@@ -54,7 +55,7 @@ export default function SettingsSidebar() {
   const [isLimitDrawerOpen, setIsLimitDrawerOpen] = useState(false)
 
   const isCompressionDisabled = !hasOriginalImages || isCompressing
-  const isCompressionComplete = hasCompressedImages && !settingsChanged
+  const isCompressionComplete = hasCompressedImages && !settingsChanged && !hasUncompressedImages
   const isCompressionEnabled = !isCompressionDisabled && !isCompressionComplete
   const isGridEmpty = !hasOriginalImages || isCompressing
 

@@ -39,6 +39,7 @@ export const compressImage = async (
 
     img.onload = () => {
       clearTimeout(timeout)
+
       if (img.width > 8000 || img.height > 8000) {
         reject(new Error("Image dimensions too large"))
         return
@@ -72,12 +73,18 @@ export const compressImage = async (
       }
 
       ctx.drawImage(img, 0, 0, width, height)
+
       canvas.toBlob(
         (blob) => {
-          if (blob) {
-            resolve(blob)
-          } else {
+          if (!blob) {
             reject(new Error("Canvas toBlob failed"))
+            return
+          }
+          // Never return a result larger than the original
+          if (blob.size >= file.size) {
+            resolve(file.slice(0, file.size, file.type))
+          } else {
+            resolve(blob)
           }
         },
         options.outputType,
@@ -136,4 +143,14 @@ export const setRangeColor = (
       : normalizedValue <= 90
         ? colors.high
         : colors.critical
+}
+
+export const getEffectiveOutputType = (
+  requestedType: string,
+  quality: number
+): string => {
+  if (requestedType === "image/png" && quality < 1) {
+    return "image/webp"
+  }
+  return requestedType
 }

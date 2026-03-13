@@ -5,7 +5,7 @@ import {
   type CompressedImage,
   type OriginalImage,
 } from "@/contexts/image-context"
-import { compressImage, formatFileSize } from "@/lib/utils"
+import { compressImage, formatFileSize, getEffectiveOutputType } from "@/lib/utils"
 import JSZip from "jszip"
 import { useCallback, useRef } from "react"
 import { toast } from "sonner"
@@ -25,6 +25,10 @@ export function useImageCompressor() {
     setOriginalImages,
   } = useImageContext()
 
+  const isCompressingRef = useRef(false)
+  const compressedImagesRef = useRef(compressedImages)
+  compressedImagesRef.current = compressedImages
+
   // Track which images are currently being processed
   const processingImagesRef = useRef<Set<string>>(new Set())
 
@@ -37,6 +41,9 @@ export function useImageCompressor() {
   // Derived state
   const hasOriginalImages = originalImages.length > 0
   const hasCompressedImages = compressedImages.length > 0
+  const hasUncompressedImages = originalImages.some(
+    (img) => !compressedImages.find((c) => c.originalId === img.id)
+  )
 
   // Helper function to show toast only once per operation
   const showToastOnce = useCallback(
@@ -72,7 +79,7 @@ export function useImageCompressor() {
       }
 
       // Skip if this image has already been processed (unless we're manually recompressing)
-      if (processedImagesRef.current.has(image.id) && !isCompressing) {
+      if (processedImagesRef.current.has(image.id) && !isCompressingRef.current) {
         console.log(`[SKIP] Already processed: ${image.file.name}`)
         return null
       }
@@ -89,7 +96,12 @@ export function useImageCompressor() {
 
         // Determine output format
         let outputType = image.file.type
-        if (settings.useWebP) outputType = "image/webp"
+
+        if (settings.useWebP) {
+          outputType = "image/webp"
+        } else {
+          outputType = getEffectiveOutputType(image.file.type, settings.quality / 100)
+        }
 
         // Compress the image
         const compressedBlob = await compressImage(image.file, {
@@ -183,7 +195,6 @@ export function useImageCompressor() {
       setProcessingQueue,
       compressionErrors,
       setCompressionErrors,
-      isCompressing,
       showToastOnce,
     ]
   )
@@ -193,12 +204,15 @@ export function useImageCompressor() {
     if (!originalImages.length) return
 
     // Skip if already compressing
-    if (isCompressing) return
+    if (isCompressingRef.current) return
 
+    isCompressingRef.current = true
     setIsCompressing(true)
 
     // Clear processed images ref to allow re-compression with new settings
-    processedImagesRef.current.clear()
+    processedImagesRef.current = new Set(
+      compressedImagesRef.current.map((c) => c.originalId)
+    )
 
     try {
       // Process images in batches to avoid UI freezing
@@ -239,13 +253,13 @@ export function useImageCompressor() {
       console.error("Error in compression process:", error)
       showToastOnce("compress-all-error", "Error compressing images", "error")
     } finally {
+      isCompressingRef.current = false
       setIsCompressing(false)
     }
   }, [
     originalImages,
     compressSingleImage,
     setIsCompressing,
-    isCompressing,
     showToastOnce,
   ])
 
@@ -291,7 +305,7 @@ export function useImageCompressor() {
 
   const removeAllImages = useCallback(() => {
     // Skip if any images are being processed
-    if (processingQueue.length > 0 || isCompressing) {
+    if (processingQueue.length > 0 || isCompressingRef.current) {
       showToastOnce(
         "remove-all-error",
         "Cannot remove images while processing",
@@ -312,7 +326,6 @@ export function useImageCompressor() {
     setCompressedImages,
     setCompressionErrors,
     processingQueue,
-    isCompressing,
     showToastOnce,
   ])
 
@@ -368,7 +381,7 @@ export function useImageCompressor() {
       return
     }
 
-    if (isCompressing) {
+    if (isCompressingRef.current) {
       showToastOnce(
         "download-all-error",
         "Please wait for compression to complete",
@@ -377,6 +390,7 @@ export function useImageCompressor() {
       return
     }
 
+    isCompressingRef.current = true
     setIsCompressing(true)
     const loadingToastId = toast.loading("Creating ZIP file...")
 
@@ -410,13 +424,13 @@ export function useImageCompressor() {
       toast.dismiss(loadingToastId)
       showToastOnce("download-all-error", "Error creating ZIP file", "error")
     } finally {
+      isCompressingRef.current = false
       setIsCompressing(false)
     }
   }, [
     originalImages,
     compressedImages,
     setIsCompressing,
-    isCompressing,
     showToastOnce,
   ])
 
@@ -451,6 +465,7 @@ export function useImageCompressor() {
     compressedImages,
     hasOriginalImages,
     hasCompressedImages,
+    hasUncompressedImages,
     isCompressing,
     processingQueue,
     compressionErrors,
