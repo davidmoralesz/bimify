@@ -21,7 +21,7 @@ export const tips: Tips = {
 }
 
 export const MIN_DIMENSION = 1
-export const MAX_DIMENSION = 4000
+export const MAX_DIMENSION = 9000
 export const MIN_QUALITY = 1
 export const MAX_QUALITY = 95
 export const PROCESSING_TIMEOUT = 30 * 1000

@@ -1,4 +1,4 @@
-import { PROCESSING_TIMEOUT } from "@/config/constants"
+import { MAX_DIMENSION, PROCESSING_TIMEOUT } from "@/config/constants"
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
@@ -40,7 +40,7 @@ export const compressImage = async (
     img.onload = () => {
       clearTimeout(timeout)
 
-      if (img.width > 8000 || img.height > 8000) {
+      if (img.width > MAX_DIMENSION || img.height > MAX_DIMENSION) {
         reject(new Error("Image dimensions too large"))
         return
       }
